@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -67,9 +66,7 @@ public class MainActivity extends AppCompatActivity {
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "fr.pharminfo.pharmaciecoeuilly.pharmaciecoeuilly.MainActivity",
-                        photoFile);
+                Uri photoURI = Uri.fromFile(photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
@@ -79,14 +76,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String[] addresses = {"nxuann@gmail.com"};
+        String[] addresses = {"pharmaciecoeuilly@gmail.com"};
         String subject="Please prepare this prescription";
 
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("*/*");
         intent.putExtra(Intent.EXTRA_EMAIL, addresses);
         intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        intent.putExtra(Intent.EXTRA_STREAM, photoFile);
+        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(photoFile));
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }
